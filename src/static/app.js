@@ -18,13 +18,35 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        // Assicurati che participants sia sempre un array
+        const participants = Array.isArray(details.participants) ? details.participants : [];
+        const spotsLeft = details.max_participants - participants.length;
+
+        let participantsHTML = "";
+        if (participants.length > 0) {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Partecipanti:</strong>
+              <ul class="participants-list">
+                ${participants.map(p => `<li>${p}</li>`).join("")}
+              </ul>
+            </div>
+          `;
+        } else {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Partecipanti:</strong>
+              <span class="no-participants">Nessuno iscritto ancora</span>
+            </div>
+          `;
+        }
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHTML}
         `;
 
         activitiesList.appendChild(activityCard);
